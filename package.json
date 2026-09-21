@@ -1,0 +1,17 @@
+{
+  "name": "dsh-studio-suite",
+  "version": "0.1.0",
+  "description": "Carrier bundle: composes the image and voice workbenches as one installable suite of two components. · 载体组合包：把图像工坊与语音工坊作为两个组件一次装齐、统一开关。",
+  "private": true,
+  "type": "module",
+  "license": "MIT",
+  "dependencies": {
+    "dsh-image-studio": "link:../dsh-image-studio",
+    "dsh-voice-studio": "link:../dsh-voice-studio"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,9 @@
+# Carrier bundle: the suite owns no code of its own. Each row names one studio
+# package, resolved from the profile's node_modules (they ride in as this
+# bundle's dependencies). Install the suite alone — installing a studio's own
+# bundle beside it would collide on these loader entry ids.
+- insert:
+    - id: image-studio
+      name: dsh-image-studio
+    - id: voice-studio
+      name: dsh-voice-studio
