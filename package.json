@@ -6,8 +6,8 @@
   "type": "module",
   "license": "MIT",
   "dependencies": {
-    "dsh-image-studio": "github:XiaoLaoLv/dsh-image-studio#main",
-    "dsh-voice-studio": "github:XiaoLaoLv/dsh-voice-studio#main"
+    "dsh-image-studio": "link:../dsh-image-studio",
+    "dsh-voice-studio": "link:../dsh-voice-studio"
   },
   "dsh": {
     "bundle": {
