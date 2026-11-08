@@ -16,26 +16,30 @@ Zero code: this package only declares a bundle patch whose rows name the two stu
 ## 安装 / Install
 
 ```sh
-# 从 npm 安装（发布后可用）
-dsh plugin --profile web add dsh-studio-suite
-# 或直接从 GitHub 安装
-dsh plugin --profile web add github:XiaoLaoLv/dsh-studio-suite
-# 或本地活链接（clone 后改 patch 无需重装）
-dsh plugin --profile web add /path/to/dsh-studio-suite
+# 桌面版 / 浏览器版（推荐）：插件页「添加插件」粘贴 GitHub 规格，
+# 或使用桌面版自带的 CLI（版本与运行时一致）：
+dsh plugin --profile desktop add github:XiaoLaoLv/dsh-studio-suite
+dsh plugin --profile web    add github:XiaoLaoLv/dsh-studio-suite
 ```
 
 - bundle 层热装配（profile `patchReload: live`），安装/卸载全程**无需重启**；浏览器半按页加载，刷新一次页面（Ctrl+F5）即可。
-- 卸载：`dsh plugin --profile web remove dsh-studio-suite`（两个组件行一并撤掉）；配置保留在用户设置文档的 `image-studio` / `voice-studio` 命名空间，可手动删除。
-- 从 DSH 源码仓库运行时同一条命令走 `pnpm dsh plugin …`；本机没有 dsh 时用 `npx @deepseek-ai/dsh plugin …`（两者只是同一条命令的转发器）。
-- **不要与两个工坊的独立 bundle 同时安装**：suite 插入的行 id 与它们单独安装时相同（`image-studio` / `voice-studio`），同名行共存会触发 loader 冲突；先卸一边再装另一边。
+- 卸载：插件页对 suite 点「卸载」（两个组件行一并撤掉）；配置保留在各行自己的 Config 里，可手动删除。
+- **不要与两个工坊的独立 bundle 同时安装**：suite 插入的行 id 与它们单独安装时相同（`image-studio` / `voice-studio`），同名行共存会触发 loader 冲突；先卸一边再装另一边。装 suite 前先卸掉两个独立包。
+- **本地 `link:` 目录安装不适用于本包**：pnpm 不会替 `link:` 包安装它自己的依赖，而本包的价值正是“随行依赖”，所以 `dsh plugin add /path/to/dsh-studio-suite` 会装上但两行 import 失败。本地开发请分别安装两个工坊（见各自 README），或先 `git push` 后用上面的 GitHub 规格安装。
+- `dependencies` 指向两个工坊仓库的 `main`；要可复现的版本就把 `#main` 换成 `#<commit sha>`（发布到 npm 后则换成版本范围）。
+- **npm 命名注意**：`dsh-image-studio` / `dsh-voice-studio` 这两个无作用域名已被他人占用，若要发布请用你自己的作用域（如 `@xiaolaolv/…`），并同步改本包 patch 里的 `name`。
 
 ## 配置 / Configure
 
-插件页 → studio-suite → 各组件行的配置控件（`plugins.row.config` 槽位，键为 `<bundle 包名>#<行id>`，点开为配置子页）。配置值存于 DSH 用户设置文档（`~/.dsh/settings.yaml`）的 `image-studio` / `voice-studio` 命名空间；密钥字段脱敏不回显。
+插件页 → studio-suite → 各组件行的配置控件（`plugins.row.config` 槽位，键为 `<bundle 包名>#<行id>`，点开为配置子页）。配置值是各行的插件 Config（`volatile()` 字段），落在 profile 配置文档 `~/.dsh/profiles/<profile>/cordis.patch.yml` 的对应行 `config:` 节；密钥字段脱敏不回显。
+
+## 兼容性 / Compatibility
+
+适配 DeepSeek Harness `0.2.x` 线（含桌面版 `0.2.1-rc.x`）。两个组件使用 `configForms` 客户端服务与 `volatile()` 插件 Config；suite 自身只用 `insert` 补丁，无版本耦合。
 
 ## 开发 / Development
 
-`dependencies` 以 `link:` 直链两个工坊目录，改工坊源码刷新页面即生效；改本包 patch 由 loader 热装配。发布到 npm 前把 `link:` 换成版本范围（该范围即两个工坊的兼容矩阵）。以后新增家族成员 = patch 加一行 + dependencies 加一项，老用户更新 suite 即得。
+两个工坊在本地各自 `pnpm install` 后独立安装、刷新页面即生效；`git push` 之后 GitHub 规格安装会拿到同一份代码。发布到 npm 前把 `dependencies` 的 `github:…#main` 换成版本范围（该范围即两个工坊的兼容矩阵）。以后新增家族成员 = patch 加一行 + dependencies 加一项，老用户更新 suite 即得。
 
 ## License
 
